@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1a1a2e">
+<title>הסעות חוג</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#f7f6f2;--primary:#1a1a2e;--accent:#e84855;
+  --go:#2d6a4f;--go-light:#d8f3dc;--back:#1d3557;--back-light:#d6e8f5;
+  --text:#1a1a2e;--muted:#6b7280;--border:#e5e3dc;--radius:12px;
+  --shadow:0 2px 12px rgba(0,0,0,0.08);
+}
+body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* HOME */
+#homeScreen{min-height:100vh;display:flex;flex-direction:column;}
+.home-header{background:var(--primary);color:white;padding:28px 20px 24px;text-align:center;}
+.home-header h1{font-size:26px;font-weight:700;}
+.home-header p{font-size:13px;opacity:0.6;margin-top:4px;}
+.home-body{flex:1;padding:20px 16px;}
+.home-body h2{font-size:15px;font-weight:700;color:var(--muted);margin-bottom:14px;text-transform:uppercase;letter-spacing:0.5px;}
+.club-card{background:white;border-radius:var(--radius);border:1px solid var(--border);padding:16px 18px;margin-bottom:12px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:var(--shadow);}
+.club-card:active{border-color:var(--accent);}
+.club-icon{font-size:28px;width:44px;height:44px;background:var(--bg);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.club-info{flex:1;}
+.club-name{font-size:16px;font-weight:700;}
+.club-meta{font-size:12px;color:var(--muted);margin-top:2px;}
+.club-del{background:none;border:none;font-size:18px;cursor:pointer;padding:4px 8px;color:#ccc;}
+.club-del:active{color:var(--accent);}
+.club-arrow{font-size:18px;color:var(--muted);}
+.add-club-btn{width:100%;padding:14px;background:var(--accent);color:white;border:none;border-radius:var(--radius);font-family:'Heebo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;margin-top:8px;}
+.add-club-btn:active{opacity:0.85;}
+
+/* APP */
+#appScreen{display:none;min-height:100vh;flex-direction:column;}
+#appScreen.visible{display:flex;}
+.header{background:var(--primary);color:white;padding:14px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50;}
+.back-btn{background:none;border:none;color:white;font-size:20px;cursor:pointer;padding:2px 6px;}
+.header-center{flex:1;text-align:center;}
+.header-center h1{font-size:17px;font-weight:700;}
+.header-center p{font-size:11px;opacity:0.6;margin-top:1px;}
+.settings-btn{background:none;border:none;color:white;font-size:22px;cursor:pointer;padding:2px 6px;}
+
+.controls{background:white;border-bottom:1px solid var(--border);padding:12px 14px;display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;}
+.picker-wrap{display:flex;align-items:center;gap:5px;}
+.picker-label{font-size:13px;color:var(--muted);}
+.arrow-btn{width:32px;height:36px;border:1.5px solid var(--border);border-radius:8px;background:white;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);}
+.arrow-btn:active{background:var(--bg);}
+.picker-val{min-width:68px;height:36px;border:1.5px solid var(--border);border-radius:8px;background:white;font-size:14px;font-weight:500;color:var(--text);display:flex;align-items:center;justify-content:center;}
+.gen-btn{padding:9px 18px;background:var(--accent);color:white;border:none;border-radius:8px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;}
+.gen-btn:active{opacity:0.85;}
+
+.tabs{display:flex;border-bottom:1.5px solid var(--border);background:white;overflow-x:auto;}
+.tab{flex:1;min-width:70px;padding:11px 6px;font-family:'Heebo',sans-serif;font-size:13px;font-weight:500;border:none;background:none;color:var(--muted);cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-1.5px;white-space:nowrap;}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+.content{padding:14px;max-width:640px;margin:0 auto;width:100%;}
+.notice{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:10px 14px;font-size:12px;color:var(--muted);margin-bottom:14px;text-align:center;line-height:1.6;}
+
+.day-block{background:white;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow);}
+.day-hdr{background:var(--primary);color:white;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;gap:6px;}
+.day-name{font-size:14px;font-weight:700;}
+.day-date{font-size:12px;opacity:0.65;flex:1;text-align:center;}
+.cars-badge{background:var(--accent);color:white;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;}
+.dir-section{padding:10px 14px;}
+.dir-section+.dir-section{border-top:1px solid var(--border);}
+.dir-title{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;display:inline-block;margin-bottom:8px;}
+.go-title{background:var(--go-light);color:var(--go);}
+.back-title{background:var(--back-light);color:var(--back);}
+.car-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);}
+.car-row:last-child{border-bottom:none;}
+.car-num{font-size:11px;color:var(--muted);min-width:30px;}
+.car-driver{font-size:14px;font-weight:500;flex:1;}
+.car-info{font-size:11px;color:var(--muted);text-align:left;}
+.swap-btn{font-size:12px;padding:5px 10px;border:1px solid var(--border);border-radius:6px;background:var(--bg);cursor:pointer;font-family:'Heebo',sans-serif;color:var(--muted);}
+.swap-btn:active{border-color:var(--accent);color:var(--accent);}
+
+.tbl-wrap{overflow-x:auto;background:white;border-radius:var(--radius);border:1px solid var(--border);box-shadow:var(--shadow);}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{padding:9px 10px;border-bottom:2px solid var(--border);font-weight:700;color:var(--muted);text-align:right;white-space:nowrap;background:#fafaf8;}
+td{padding:8px 10px;border-bottom:1px solid var(--border);white-space:nowrap;}
+tr:last-child td{border-bottom:none;}
+.go-cell{color:var(--go);font-weight:500;}
+.back-cell{color:var(--back);font-weight:500;}
+.date-cell{color:var(--muted);font-size:11px;}
+
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;}
+.stat-card{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:12px 14px;box-shadow:var(--shadow);}
+.stat-name{font-size:12px;color:var(--muted);margin-bottom:2px;}
+.stat-num{font-size:26px;font-weight:700;color:var(--primary);}
+.stat-sub{font-size:11px;color:var(--muted);}
+.total-badge{background:var(--primary);color:white;text-align:center;border-radius:var(--radius);padding:12px;margin-bottom:14px;font-size:14px;font-weight:500;}
+
+/* SETTINGS */
+.settings-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;}
+.settings-overlay.open{display:block;}
+.settings-panel{position:fixed;top:0;left:0;bottom:0;width:min(340px,92vw);background:white;z-index:101;overflow-y:auto;transform:translateX(-100%);transition:transform 0.28s ease;}
+.settings-panel.open{transform:translateX(0);}
+.settings-hdr{background:var(--primary);color:white;padding:16px;display:flex;justify-content:space-between;align-items:center;}
+.settings-hdr h2{font-size:17px;font-weight:700;}
+.close-btn{background:none;border:none;color:white;font-size:22px;cursor:pointer;}
+.settings-section{padding:16px;}
+.settings-section+.settings-section{border-top:1px solid var(--border);}
+.section-title{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:12px;text-transform:uppercase;letter-spacing:0.5px;}
+
+/* kids counter */
+.kids-counter{display:flex;align-items:stretch;border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:white;}
+.kids-day{flex:1;padding:10px 8px;text-align:center;}
+.kids-day-label{font-size:11px;color:var(--muted);margin-bottom:6px;}
+.kids-counter-row{display:flex;align-items:center;justify-content:center;gap:6px;}
+.kids-btn{width:28px;height:28px;border:1.5px solid var(--border);border-radius:6px;background:var(--bg);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.kids-btn:active{background:var(--border);}
+.kids-num{font-size:18px;font-weight:700;min-width:28px;text-align:center;}
+.kids-divider{width:1px;background:var(--border);}
+
+/* driver list */
+.driver-item{background:var(--bg);border-radius:10px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:flex-start;gap:8px;}
+.driver-item-info{flex:1;}
+.driver-item-name{font-size:14px;font-weight:500;}
+.driver-item-seats{font-size:12px;color:var(--muted);margin-top:1px;}
+.driver-caps{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}
+.cap-badge{font-size:10px;padding:2px 6px;border-radius:20px;font-weight:500;}
+.cap-go{background:var(--go-light);color:var(--go);}
+.cap-back{background:var(--back-light);color:var(--back);}
+.cap-day{background:#fef3c7;color:#92400e;}
+.del-btn{background:none;border:none;font-size:18px;cursor:pointer;color:#ccc;padding:2px 4px;flex-shrink:0;}
+.del-btn:active{color:var(--accent);}
+
+/* add form */
+.add-form{background:var(--bg);border-radius:10px;padding:14px;}
+.form-row{margin-bottom:12px;}
+.form-row label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px;font-weight:500;}
+.form-row input[type=text]{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'Heebo',sans-serif;font-size:14px;color:var(--text);background:white;}
+.form-row input[type=text]:focus{outline:none;border-color:var(--accent);}
+
+/* seats picker in form */
+.seats-picker{display:flex;align-items:center;gap:10px;background:white;border:1.5px solid var(--border);border-radius:8px;padding:7px 12px;}
+.seats-picker button{width:30px;height:30px;border:1.5px solid var(--border);border-radius:6px;background:var(--bg);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.seats-picker button:active{background:var(--border);}
+.seats-picker .seats-val{font-size:16px;font-weight:700;flex:1;text-align:center;}
+.seats-picker .seats-lbl{font-size:12px;color:var(--muted);}
+
+.checkboxes{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.cb-item{display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;padding:7px 10px;border:1.5px solid var(--border);border-radius:8px;background:white;}
+.cb-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;flex-shrink:0;}
+.cb-item.checked{border-color:var(--accent);background:#fff5f5;}
+.add-btn{width:100%;padding:11px;background:var(--accent);color:white;border:none;border-radius:8px;font-family:'Heebo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:4px;}
+.add-btn:active{opacity:0.85;}
+.err-msg{font-size:12px;color:var(--accent);margin-top:6px;display:none;}
+
+/* MODALS */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:flex-end;justify-content:center;}
+.modal-bg.open{display:flex;}
+.modal{background:white;border-radius:20px 20px 0 0;padding:22px 18px 32px;width:100%;max-width:480px;}
+.modal h3{font-size:16px;font-weight:700;margin-bottom:5px;}
+.modal-desc{font-size:13px;color:var(--muted);margin-bottom:14px;}
+.driver-list-modal{max-height:240px;overflow-y:auto;border:1.5px solid var(--border);border-radius:10px;margin-bottom:14px;}
+.driver-opt{padding:11px 14px;border-bottom:1px solid var(--border);font-size:14px;cursor:pointer;display:flex;align-items:center;gap:10px;}
+.driver-opt:last-child{border-bottom:none;}
+.driver-opt.selected{background:#fff5f5;font-weight:500;color:var(--accent);}
+.driver-opt .check{width:18px;height:18px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.driver-opt.selected .check{background:var(--accent);border-color:var(--accent);color:white;}
+.driver-opt-sub{font-size:11px;color:var(--muted);margin-top:1px;}
+.modal-btns{display:flex;gap:10px;}
+.modal-btns button{flex:1;padding:13px;border-radius:10px;font-family:'Heebo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;border:none;}
+.btn-confirm{background:var(--accent);color:white;}
+.btn-cancel{background:var(--bg);color:var(--text);}
+
+/* new club modal */
+.modal-center{align-items:center;}
+.modal-card{background:white;border-radius:20px;padding:24px 20px;width:min(360px,92vw);}
+.modal-card h3{font-size:17px;font-weight:700;margin-bottom:14px;}
+.modal-field{margin-bottom:12px;}
+.modal-field label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px;font-weight:500;}
+.modal-field input{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'Heebo',sans-serif;font-size:14px;}
+.modal-field input:focus{outline:none;border-color:var(--accent);}
+.modal-field .hint{font-size:11px;color:var(--muted);margin-top:3px;}
+.day-check-row{display:flex;gap:6px;flex-wrap:wrap;}
+.day-check{padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;text-align:center;font-size:13px;cursor:pointer;}
+.day-check.on{border-color:var(--accent);background:#fff5f5;color:var(--accent);font-weight:700;}
+
+.empty{text-align:center;padding:40px 20px;color:var(--muted);}
+.empty .icon{font-size:40px;margin-bottom:12px;}
+.empty p{font-size:14px;}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div id="homeScreen">
+  <div class="home-header">
+    <div style="font-size:36px;margin-bottom:8px;">🚗</div>
+    <h1>הסעות חוג</h1>
+    <p>ניהול הסעות לכל החוגים שלך</p>
+  </div>
+  <div class="home-body">
+    <h2>החוגים שלי</h2>
+    <div id="clubList"></div>
+    <button class="add-club-btn" onclick="openNewClubModal()">+ הוסף חוג חדש</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appScreen">
+  <div class="header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <div class="header-center">
+      <h1 id="appTitle">הסעות</h1>
+      <p id="appSubtitle"></p>
+    </div>
+    <button class="settings-btn" onclick="openSettings()">⚙️</button>
+  </div>
+  <div class="controls">
+    <div class="picker-wrap">
+      <span class="picker-label">חודש:</span>
+      <button class="arrow-btn" onclick="changeMonth(-1)">‹</button>
+      <div class="picker-val" id="monthDisplay"></div>
+      <button class="arrow-btn" onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="picker-wrap">
+      <span class="picker-label">שנה:</span>
+      <button class="arrow-btn" onclick="changeYear(-1)">‹</button>
+      <div class="picker-val" id="yearDisplay"></div>
+      <button class="arrow-btn" onclick="changeYear(1)">›</button>
+    </div>
+    <button class="gen-btn" onclick="generate()">צור לוח ←</button>
+  </div>
+  <div class="tabs">
+    <button class="tab active" id="t-schedule" onclick="showTab('schedule')">לוח הסעות</button>
+    <button class="tab" id="t-table" onclick="showTab('table')">טבלה</button>
+    <button class="tab" id="t-stats" onclick="showTab('stats')">סטטיסטיקות</button>
+  </div>
+  <div class="content">
+    <div id="tab-schedule"><div class="empty"><div class="icon">📅</div><p>לחצי על "צור לוח"</p></div></div>
+    <div id="tab-table" style="display:none"></div>
+    <div id="tab-stats" style="display:none"></div>
+  </div>
+</div>
+
+<!-- SETTINGS PANEL -->
+<div class="settings-overlay" id="settingsOverlay" onclick="closeSettings()"></div>
+<div class="settings-panel" id="settingsPanel">
+  <div class="settings-hdr">
+    <h2>⚙️ הגדרות</h2>
+    <button class="close-btn" onclick="closeSettings()">✕</button>
+  </div>
+  <div class="settings-section">
+    <div class="section-title">מספר ילדים</div>
+    <div class="kids-counter">
+      <div class="kids-day">
+        <div class="kids-day-label" id="kidsLabelA">יום א'</div>
+        <div class="kids-counter-row">
+          <button class="kids-btn" onclick="changeKids('a',-1)">−</button>
+          <div class="kids-num" id="kidsADisplay">0</div>
+          <button class="kids-btn" onclick="changeKids('a',1)">+</button>
+        </div>
+      </div>
+      <div class="kids-divider"></div>
+      <div class="kids-day">
+        <div class="kids-day-label" id="kidsLabelB">יום ב'</div>
+        <div class="kids-counter-row">
+          <button class="kids-btn" onclick="changeKids('b',-1)">−</button>
+          <div class="kids-num" id="kidsBDisplay">0</div>
+          <button class="kids-btn" onclick="changeKids('b',1)">+</button>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:11px;color:var(--muted);margin-top:8px;text-align:center;">שינוי ייכנס לתוקף ב"צור לוח"</p>
+  </div>
+
+  <div class="settings-section">
+    <div class="section-title">הוספת מסיע</div>
+    <div class="add-form">
+      <div class="form-row">
+        <label>שם המשפחה</label>
+        <input type="text" id="newName" placeholder="לדוגמה: כהן">
+      </div>
+      <div class="form-row">
+        <label>מקומות לנוסעים ברכב</label>
+        <div class="seats-picker">
+          <button onclick="changeNewSeats(-1)">−</button>
+          <span class="seats-val" id="newSeatsVal">4</span>
+          <span class="seats-lbl">נוסעים</span>
+          <button onclick="changeNewSeats(1)">+</button>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;">2 = נהג צעיר &nbsp;|&nbsp; 4 = רגיל &nbsp;|&nbsp; 6 = מיניבוס</div>
+      </div>
+      <div class="form-row">
+        <label>ימים וכיוונים</label>
+        <div class="checkboxes" id="cbContainer"></div>
+      </div>
+      <button class="add-btn" onclick="addDriver()">+ הוסף מסיע</button>
+      <div class="err-msg" id="errMsg">יש למלא שם ולבחור לפחות כיוון אחד</div>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <div class="section-title">מסיעים קיימים (<span id="driverCount">0</span>)</div>
+    <div id="driverList"></div>
+  </div>
+</div>
+
+<!-- SWAP MODAL -->
+<div class="modal-bg" id="swapModal">
+  <div class="modal">
+    <h3>החלפת מסיע</h3>
+    <p class="modal-desc" id="modal-desc"></p>
+    <div class="driver-list-modal" id="modal-driver-list"></div>
+    <div class="modal-btns">
+      <button class="btn-confirm" onclick="confirmSwap()">אישור</button>
+      <button class="btn-cancel" onclick="closeSwapModal()">ביטול</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEW CLUB MODAL -->
+<div class="modal-bg modal-center" id="newClubModal">
+  <div class="modal-card">
+    <h3>➕ חוג חדש</h3>
+    <div class="modal-field">
+      <label>שם החוג</label>
+      <input type="text" id="nc-name" placeholder="לדוגמה: קראטה, ריקוד...">
+    </div>
+    <div class="modal-field">
+      <label>ימי החוג</label>
+      <div class="day-check-row">
+        <div class="day-check on" id="dc-mon" onclick="toggleDay('mon')">שני</div>
+        <div class="day-check on" id="dc-thu" onclick="toggleDay('thu')">חמישי</div>
+        <div class="day-check" id="dc-sun" onclick="toggleDay('sun')">ראשון</div>
+        <div class="day-check" id="dc-tue" onclick="toggleDay('tue')">שלישי</div>
+        <div class="day-check" id="dc-wed" onclick="toggleDay('wed')">רביעי</div>
+      </div>
+    </div>
+    <div class="modal-field">
+      <label>ילדים ביום הראשון של החוג</label>
+      <input type="number" id="nc-kids-a" placeholder="16" min="1">
+      <div class="hint" style="margin-top:4px;"></div>
+      <label style="margin-top:8px;">ילדים ביום השני (אם שונה)</label>
+      <input type="number" id="nc-kids-b" placeholder="אותו מספר" min="1" style="margin-top:4px;">
+    </div>
+    <div class="modal-btns" style="margin-top:4px;">
+      <button class="btn-confirm" onclick="createClub()">צור חוג</button>
+      <button class="btn-cancel" onclick="closeNewClubModal()">ביטול</button>
+    </div>
+    <div class="err-msg" id="nc-err">יש למלא שם ולבחור לפחות יום אחד</div>
+  </div>
+</div>
+
+<script>
+const MONTHS=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+const DAY_LABELS={mon:'שני',thu:'חמישי',sun:'ראשון',tue:'שלישי',wed:'רביעי'};
+const DAY_JS={mon:1,thu:4,sun:0,tue:2,wed:3};
+const ICONS=['🏃','⚽','🎵','🥋','🎭','🏊','🎨','🏀','🎸','🤸'];
+
+function save(){try{localStorage.setItem('hossaot_v2',JSON.stringify(clubs));}catch(e){}}
+function load(){try{const d=localStorage.getItem('hossaot_v2');if(d)return JSON.parse(d);}catch(e){}return null;}
+
+const DEFAULT_DRIVERS=[
+  {name:'בירתי',  seats:4,mon:{go:true, back:false},thu:{go:true, back:true}},
+  {name:'אברישמי',seats:4,mon:{go:false,back:true}, thu:{go:false,back:true}},
+  {name:'וטין',   seats:4,mon:{go:false,back:true}, thu:{go:false,back:true}},
+  {name:'דיטור',  seats:4,mon:{go:true, back:true}, thu:{go:false,back:false}},
+  {name:'ברלב',   seats:4,mon:{go:false,back:true}, thu:{go:false,back:true}},
+  {name:'לב',     seats:4,mon:{go:false,back:true}, thu:{go:false,back:true}},
+  {name:"ג'יקובסון",seats:4,mon:{go:true,back:true},thu:{go:false,back:false}},
+  {name:'ביר',    seats:4,mon:{go:false,back:false},thu:{go:true, back:true}},
+  {name:'גורה',   seats:4,mon:{go:true, back:true}, thu:{go:false,back:false}},
+  {name:'וולפה',  seats:4,mon:{go:false,back:true}, thu:{go:true, back:true}},
+  {name:'חמו',    seats:4,mon:{go:false,back:false},thu:{go:true, back:true}},
+  {name:'אברהם',  seats:4,mon:{go:false,back:true}, thu:{go:false,back:true}},
+  {name:'ויין',   seats:4,mon:{go:true, back:true}, thu:{go:true, back:true}},
+  {name:'פישביין',seats:4,mon:{go:true, back:false},thu:{go:true, back:true}},
+  {name:'אנדי',   seats:4,mon:{go:false,back:true}, thu:{go:false,back:true}},
+  {name:'לנגבהים',seats:4,mon:{go:false,back:true}, thu:{go:false,back:true}},
+  {name:'כהן',    seats:4,mon:{go:false,back:false},thu:{go:false,back:true}},
+  {name:'שיקלי',  seats:4,mon:{go:false,back:false},thu:{go:false,back:true}},
+  {name:'טיסר',   seats:4,mon:{go:false,back:false},thu:{go:false,back:true}},
+];
+
+let clubs=load()||[{
+  id:1,name:'חוג ראשי',icon:'🏃',
+  days:['mon','thu'],kidsA:16,kidsB:20,
+  drivers:JSON.parse(JSON.stringify(DEFAULT_DRIVERS))
+}];
+
+let activeClub=null;
+let curMonth=new Date().getMonth(),curYear=new Date().getFullYear();
+let schedule=[],counts={},swapTarget=null,selectedDriver=null;
+let newClubDays=['mon','thu'];
+let newSeats=4;
+
+// ---- HOME ----
+function renderHome(){
+  const el=document.getElementById('clubList');
+  if(!clubs.length){el.innerHTML='<div class="empty"><div class="icon">🏃</div><p>הוסיפי חוג ראשון!</p></div>';return;}
+  el.innerHTML=clubs.map((c,i)=>{
+    const totalSeats=c.drivers.reduce((s,d)=>s+(d.seats||4),0);
+    return`<div class="club-card" onclick="openClub(${i})">
+      <div class="club-icon">${c.icon}</div>
+      <div class="club-info">
+        <div class="club-name">${c.name}</div>
+        <div class="club-meta">${c.days.map(d=>DAY_LABELS[d]).join(' + ')} | ${c.drivers.length} מסיעים | ${c.kidsA}/${c.kidsB} ילדים</div>
+      </div>
+      <button class="club-del" onclick="event.stopPropagation();deleteClub(${i})">🗑</button>
+      <span class="club-arrow">›</span>
+    </div>`;
+  }).join('');
+}
+
+function deleteClub(i){
+  if(!confirm(`למחוק את "${clubs[i].name}"?`)) return;
+  clubs.splice(i,1);save();renderHome();
+}
+
+function goHome(){
+  document.getElementById('appScreen').classList.remove('visible');
+  document.getElementById('homeScreen').style.display='flex';
+  schedule=[];activeClub=null;
+  renderHome();
+}
+
+function openClub(i){
+  activeClub=i;
+  const c=clubs[i];
+  document.getElementById('appTitle').textContent=c.name;
+  document.getElementById('appSubtitle').textContent=`${c.days.map(d=>DAY_LABELS[d]).join(' + ')}`;
+  document.getElementById('homeScreen').style.display='none';
+  document.getElementById('appScreen').classList.add('visible');
+  updateDisplay();updateKidsDisplay();
+  schedule=[];
+  document.getElementById('tab-schedule').innerHTML='<div class="empty"><div class="icon">📅</div><p>לחצי על "צור לוח"</p></div>';
+  document.getElementById('tab-table').innerHTML='';
+  document.getElementById('tab-stats').innerHTML='';
+  showTab('schedule');
+}
+
+// ---- NEW CLUB ----
+function openNewClubModal(){
+  newClubDays=['mon','thu'];
+  ['mon','thu','sun','tue','wed'].forEach(d=>document.getElementById('dc-'+d).classList.toggle('on',newClubDays.includes(d)));
+  document.getElementById('nc-name').value='';
+  document.getElementById('nc-kids-a').value='';
+  document.getElementById('nc-kids-b').value='';
+  document.getElementById('nc-err').style.display='none';
+  document.getElementById('newClubModal').classList.add('open');
+}
+function closeNewClubModal(){document.getElementById('newClubModal').classList.remove('open');}
+function toggleDay(d){
+  const idx=newClubDays.indexOf(d);
+  if(idx>=0)newClubDays.splice(idx,1);else newClubDays.push(d);
+  document.getElementById('dc-'+d).classList.toggle('on',newClubDays.includes(d));
+}
+function createClub(){
+  const name=document.getElementById('nc-name').value.trim();
+  const err=document.getElementById('nc-err');
+  if(!name||!newClubDays.length){err.style.display='block';return;}
+  err.style.display='none';
+  const kidsA=parseInt(document.getElementById('nc-kids-a').value)||16;
+  const kidsB=parseInt(document.getElementById('nc-kids-b').value)||kidsA;
+  const icon=ICONS[clubs.length%ICONS.length];
+  // sort days by weekday order
+  const order=['sun','mon','tue','wed','thu'];
+  const days=[...newClubDays].sort((a,b)=>order.indexOf(a)-order.indexOf(b));
+  clubs.push({id:Date.now(),name,icon,days,kidsA,kidsB,drivers:[]});
+  save();closeNewClubModal();renderHome();
+}
+
+// ---- SCHEDULE ----
+function updateDisplay(){
+  document.getElementById('monthDisplay').textContent=MONTHS[curMonth];
+  document.getElementById('yearDisplay').textContent=curYear;
+}
+function changeMonth(d){curMonth=(curMonth+12+d)%12;updateDisplay();}
+function changeYear(d){curYear+=d;updateDisplay();}
+updateDisplay();
+
+function updateKidsDisplay(){
+  if(activeClub===null)return;
+  const c=clubs[activeClub];
+  const labelA=c.days[0]?'יום '+DAY_LABELS[c.days[0]]:'יום א\'';
+  const labelB=c.days[1]?'יום '+DAY_LABELS[c.days[1]]:'יום ב\'';
+  document.getElementById('kidsLabelA').textContent=labelA;
+  document.getElementById('kidsLabelB').textContent=labelB;
+  document.getElementById('kidsADisplay').textContent=c.kidsA;
+  document.getElementById('kidsBDisplay').textContent=c.kidsB;
+}
+function changeKids(ab,delta){
+  if(activeClub===null)return;
+  const c=clubs[activeClub];
+  if(ab==='a')c.kidsA=Math.max(1,c.kidsA+delta);
+  else c.kidsB=Math.max(1,c.kidsB+delta);
+  save();updateKidsDisplay();
+}
+
+function getDates(year,month,days){
+  const out=[];const d=new Date(year,month,1);
+  while(d.getMonth()===month){
+    days.forEach(day=>{if(d.getDay()===DAY_JS[day])out.push({date:new Date(d),type:day});});
+    d.setDate(d.getDate()+1);
+  }
+  return out.sort((a,b)=>a.date-b.date);
+}
+
+function getEligible(drivers,type,dir){
+  return drivers.filter(d=>d[type]&&d[type][dir]);
+}
+
+// pick drivers considering variable seat counts
+// returns array of {name, seats} assignments to fill totalKids seats
+function assignDrivers(pool, totalKids, counts, exclude=[]) {
+  const avail=[...pool].filter(d=>!exclude.includes(d.name));
+  avail.sort((a,b)=>(counts[a.name]||0)-(counts[b.name]||0));
+  const result=[];
+  let remaining=totalKids;
+  for(const d of avail){
+    if(remaining<=0)break;
+    result.push({name:d.name,seats:d.seats||4,kids:Math.min(d.seats||4,remaining)});
+    remaining-=Math.min(d.seats||4,remaining);
+  }
+  return result;
+}
+
+function generate(){
+  if(activeClub===null)return;
+  const c=clubs[activeClub];
+  const dates=getDates(curYear,curMonth,c.days);
+  counts={};c.drivers.forEach(d=>counts[d.name]=0);
+  schedule=dates.map(({date,type})=>{
+    const totalKids=type===c.days[0]?c.kidsA:c.kidsB;
+    const goPool=getEligible(c.drivers,type,'go');
+    const backPool=getEligible(c.drivers,type,'back');
+    const goAssigned=assignDrivers(goPool,totalKids,counts);
+    goAssigned.forEach(a=>counts[a.name]++);
+    const backAssigned=assignDrivers(backPool,totalKids,counts,goAssigned.map(a=>a.name));
+    backAssigned.forEach(a=>counts[a.name]++);
+    return{date,type,totalKids,go:goAssigned,back:backAssigned};
+  });
+  renderSchedule();renderTable();renderStats();
+}
+
+function fmtDate(d){
+  const days=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  return `${days[d.getDay()]} ${d.getDate()}/${d.getMonth()+1}`;
+}
+
+function renderSchedule(){
+  const el=document.getElementById('tab-schedule');
+  if(!schedule.length){el.innerHTML='<div class="empty"><div class="icon">📅</div><p>לחצי על "צור לוח"</p></div>';return;}
+  let html=`<div class="notice">${MONTHS[curMonth]} ${curYear} — ${schedule.length} ימי חוג</div>`;
+  schedule.forEach((e,di)=>{
+    const lbl='יום '+DAY_LABELS[e.type];
+    const cars=e.go.length;
+    html+=`<div class="day-block"><div class="day-hdr"><span class="day-name">${lbl}</span><span class="day-date">${fmtDate(e.date)}</span><span class="cars-badge">${cars} רכבים</span></div>
+    <div class="dir-section"><span class="dir-title go-title">הלוך</span>`;
+    e.go.forEach((a,ci)=>{
+      html+=`<div class="car-row"><span class="car-num">🚗${ci+1}</span><span class="car-driver">${a.name}</span><span class="car-info">${a.kids}/${a.seats} ילדים</span><button class="swap-btn" onclick="openSwap(${di},'go',${ci})">החלף</button></div>`;
+    });
+    html+=`</div><div class="dir-section"><span class="dir-title back-title">חזור</span>`;
+    e.back.forEach((a,ci)=>{
+      html+=`<div class="car-row"><span class="car-num">🚗${ci+1}</span><span class="car-driver">${a.name}</span><span class="car-info">${a.kids}/${a.seats} ילדים</span><button class="swap-btn" onclick="openSwap(${di},'back',${ci})">החלף</button></div>`;
+    });
+    html+=`</div></div>`;
+  });
+  el.innerHTML=html;
+}
+
+function renderTable(){
+  const el=document.getElementById('tab-table');
+  if(!schedule.length){el.innerHTML='';return;}
+  let html=`<div class="notice" style="margin-bottom:12px;">${MONTHS[curMonth]} ${curYear}</div><div class="tbl-wrap"><table><thead><tr><th>תאריך</th><th>יום</th><th>רכב</th><th>הלוך</th><th>חזור</th><th>ילדים</th></tr></thead><tbody>`;
+  schedule.forEach(e=>{
+    const lbl=DAY_LABELS[e.type];
+    const ds=`${e.date.getDate()}/${e.date.getMonth()+1}`;
+    const maxCars=Math.max(e.go.length,e.back.length);
+    for(let ci=0;ci<maxCars;ci++){
+      const g=e.go[ci],b=e.back[ci];
+      html+=`<tr>${ci===0?`<td class="date-cell" rowspan="${maxCars}">${ds}</td><td rowspan="${maxCars}">${lbl}</td>`:''}<td>${ci+1}</td><td class="go-cell">${g?g.name:'—'}</td><td class="back-cell">${b?b.name:'—'}</td><td>${g?`${g.kids}/${g.seats}`:'—'}</td></tr>`;
+    }
+  });
+  html+=`</tbody></table></div>`;el.innerHTML=html;
+}
+
+function renderStats(){
+  const el=document.getElementById('tab-stats');
+  const sorted=Object.entries(counts).sort((a,b)=>b[1]-a[1]);
+  const total=sorted.reduce((s,[,v])=>s+v,0);
+  let html=`<div class="total-badge">סה"כ הסעות החודש: ${total}</div><div class="stats-grid">`;
+  sorted.forEach(([name,cnt])=>{
+    const d=activeClub!==null?clubs[activeClub].drivers.find(x=>x.name===name):null;
+    const seats=d?d.seats||4:4;
+    html+=`<div class="stat-card"><div class="stat-name">${name}</div><div class="stat-num">${cnt}</div><div class="stat-sub">הסעות | ${seats} מקומות</div></div>`;
+  });
+  html+=`</div>`;el.innerHTML=html;
+}
+
+function showTab(tab){
+  ['schedule','table','stats'].forEach(t=>{
+    document.getElementById('tab-'+t).style.display=t===tab?'block':'none';
+    document.getElementById('t-'+t).classList.toggle('active',t===tab);
+  });
+}
+
+// ---- SETTINGS ----
+function buildAddForm(){
+  if(activeClub===null)return;
+  const c=clubs[activeClub];
+  const cbs=document.getElementById('cbContainer');
+  cbs.innerHTML=c.days.map(day=>`
+    <label class="cb-item" id="lbl-${day}-go"><input type="checkbox" id="cb-${day}-go"> ${DAY_LABELS[day]} הלוך</label>
+    <label class="cb-item" id="lbl-${day}-back"><input type="checkbox" id="cb-${day}-back"> ${DAY_LABELS[day]} חזור</label>
+  `).join('');
+  document.querySelectorAll('#cbContainer .cb-item input[type=checkbox]').forEach(cb=>{
+    cb.addEventListener('change',function(){this.closest('.cb-item').classList.toggle('checked',this.checked);});
+  });
+  // reset seats display
+  newSeats=4;
+  document.getElementById('newSeatsVal').textContent=newSeats;
+}
+
+function openSettings(){
+  buildAddForm();
+  updateKidsDisplay();
+  renderDriverList();
+  document.getElementById('settingsOverlay').classList.add('open');
+  document.getElementById('settingsPanel').classList.add('open');
+}
+function closeSettings(){
+  document.getElementById('settingsOverlay').classList.remove('open');
+  document.getElementById('settingsPanel').classList.remove('open');
+}
+
+function changeNewSeats(delta){
+  newSeats=Math.max(1,Math.min(9,newSeats+delta));
+  document.getElementById('newSeatsVal').textContent=newSeats;
+}
+
+function renderDriverList(){
+  if(activeClub===null)return;
+  const c=clubs[activeClub];
+  document.getElementById('driverCount').textContent=c.drivers.length;
+  const el=document.getElementById('driverList');
+  if(!c.drivers.length){el.innerHTML='<p style="font-size:13px;color:var(--muted);text-align:center;padding:10px 0;">אין מסיעים עדיין</p>';return;}
+  el.innerHTML=c.drivers.map((d,i)=>{
+    let caps='';
+    c.days.forEach(day=>{
+      if(d[day]){
+        if(d[day].go) caps+=`<span class="cap-badge cap-go">${DAY_LABELS[day]} הלוך</span>`;
+        if(d[day].back) caps+=`<span class="cap-badge cap-back">${DAY_LABELS[day]} חזור</span>`;
+      }
+    });
+    const seats=d.seats||4;
+    const seatsLabel=seats===2?'נהג צעיר (2)':seats===6?'מיניבוס (6)':`${seats} מקומות`;
+    return`<div class="driver-item">
+      <div class="driver-item-info">
+        <div class="driver-item-name">${d.name} <span style="font-size:11px;color:var(--muted);">🚗 ${seatsLabel}</span></div>
+        <div class="driver-caps">${caps||'<span style="font-size:11px;color:var(--muted);">לא מוגדר</span>'}</div>
+      </div>
+      <button class="del-btn" onclick="removeDriver(${i})">🗑</button>
+    </div>`;
+  }).join('');
+}
+
+function removeDriver(i){
+  const c=clubs[activeClub];
+  if(!confirm(`להסיר את ${c.drivers[i].name}?`))return;
+  c.drivers.splice(i,1);save();renderDriverList();
+  schedule=[];
+  document.getElementById('tab-schedule').innerHTML='<div class="empty"><div class="icon">📅</div><p>לחצי על "צור לוח" לעדכון</p></div>';
+  document.getElementById('tab-table').innerHTML='';document.getElementById('tab-stats').innerHTML='';
+}
+
+function addDriver(){
+  if(activeClub===null)return;
+  const c=clubs[activeClub];
+  const name=document.getElementById('newName').value.trim();
+  const err=document.getElementById('errMsg');
+  const caps={};let hasAny=false;
+  c.days.forEach(day=>{
+    const go=document.getElementById('cb-'+day+'-go')?.checked||false;
+    const back=document.getElementById('cb-'+day+'-back')?.checked||false;
+    caps[day]={go,back};
+    if(go||back)hasAny=true;
+  });
+  if(!name||!hasAny){err.textContent='יש למלא שם ולבחור לפחות כיוון אחד';err.style.display='block';return;}
+  if(c.drivers.find(d=>d.name===name)){err.textContent='מסיע בשם זה כבר קיים';err.style.display='block';return;}
+  err.style.display='none';
+  c.drivers.push({name,seats:newSeats,...caps});
+  save();
+  document.getElementById('newName').value='';
+  newSeats=4;document.getElementById('newSeatsVal').textContent=4;
+  document.querySelectorAll('#cbContainer .cb-item input[type=checkbox]').forEach(cb=>{cb.checked=false;cb.closest('.cb-item').classList.remove('checked');});
+  renderDriverList();
+  schedule=[];
+  document.getElementById('tab-schedule').innerHTML='<div class="empty"><div class="icon">📅</div><p>לחצי על "צור לוח" לעדכון</p></div>';
+  document.getElementById('tab-table').innerHTML='';document.getElementById('tab-stats').innerHTML='';
+}
+
+// ---- SWAP ----
+function openSwap(di,dir,ci){
+  if(activeClub===null)return;
+  const c=clubs[activeClub];
+  swapTarget={di,dir,ci};
+  const e=schedule[di];
+  const arr=dir==='go'?e.go:e.back;
+  const cur=arr[ci]?arr[ci].name:null;
+  selectedDriver=cur;
+  const lbl=dir==='go'?'הלוך':'חזור';
+  document.getElementById('modal-desc').textContent=`${fmtDate(e.date)} — ${lbl}, רכב ${ci+1}`;
+  const pool=getEligible(c.drivers,e.type,dir);
+  const list=document.getElementById('modal-driver-list');
+  list.innerHTML=pool.length?pool.map(d=>`
+    <div class="driver-opt${d.name===cur?' selected':''}" onclick="selectDriver('${d.name}',this)">
+      <div class="check">${d.name===cur?'✓':''}</div>
+      <div><div>${d.name}</div><div class="driver-opt-sub">🚗 ${d.seats||4} מקומות</div></div>
+    </div>`).join(''):'<div style="padding:14px;font-size:13px;color:var(--muted);text-align:center;">אין מסיעים זמינים</div>';
+  document.getElementById('swapModal').classList.add('open');
+}
+function selectDriver(name,el){
+  selectedDriver=name;
+  document.querySelectorAll('.driver-opt').forEach(o=>{o.classList.remove('selected');o.querySelector('.check').textContent='';});
+  el.classList.add('selected');el.querySelector('.check').textContent='✓';
+}
+function confirmSwap(){
+  if(!selectedDriver||!swapTarget)return;
+  const{di,dir,ci}=swapTarget;
+  const e=schedule[di];
+  const arr=dir==='go'?e.go:e.back;
+  const old=arr[ci]?arr[ci].name:null;
+  if(old&&counts[old])counts[old]=Math.max(0,counts[old]-1);
+  counts[selectedDriver]=(counts[selectedDriver]||0)+1;
+  const c=clubs[activeClub];
+  const driverObj=c.drivers.find(d=>d.name===selectedDriver);
+  const seats=driverObj?driverObj.seats||4:4;
+  const totalKids=e.totalKids;
+  // recalculate kids for this car
+  let filledBefore=0;
+  for(let i=0;i<ci;i++) filledBefore+=arr[i]?arr[i].kids:0;
+  const kidsForThis=Math.min(seats,Math.max(0,totalKids-filledBefore));
+  arr[ci]={name:selectedDriver,seats,kids:kidsForThis};
+  closeSwapModal();renderSchedule();renderTable();renderStats();
+}
+function closeSwapModal(){document.getElementById('swapModal').classList.remove('open');swapTarget=null;selectedDriver=null;}
+
+renderHome();
+</script>
+</body>
+</html>
